@@ -1,3 +1,4 @@
+### Author: Lisa Meeden
 ### File: konane.py
 ### Classes defined: KonaneError, Konane, Player, SimplePlayer,
 ### RandomPlayer, HumanPlayer
