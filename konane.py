@@ -122,6 +122,7 @@ class Konane:
         raise a KonaneError if the move is invalid. It returns the copy of
         the board, and does not change the given board.
         """
+
         if len(move) != 4:
             raise KonaneError
         r1 = int (move[0])
@@ -242,7 +243,8 @@ class Konane:
         self.reset()
         p1.initialize('B')
         p2.initialize('W')
-        print (p1.name, "vs", p2.name)
+        if show:
+            print (p1.name, "vs", p2.name)
         while 1:
             if show:
                 print (self)
@@ -279,28 +281,56 @@ class Konane:
             print ("Game over")
         return result
 
-    def playNGames(self, n, p1, p2, show):
+    def playNGames(self, n, p1, p2, show, tally):
         """
         Will play out n games between player p1 and player p2.
         The players alternate going first.  Prints the total
         number of games won by each player.
         """
-        first = p1
-        second = p2
-        for i in range(n):
-            print ("Game", i)
-            winner = self.playOneGame(first, second, show)
-            if winner == 'B':
-                first.won()
-                second.lost()
-                print (first.name, "wins")
-            else:
-                first.lost()
-                second.won()
-                print (second.name, "wins")
-            temp = first
-            first = second
-            second = temp
+        if tally:
+            first = p1
+            second = p2
+            p1Tally = 0
+            p2Tally = 0
+            for i in range(n):
+                winner = self.playOneGame(first, second, 0)
+                if winner == 'B':
+                    first.won()
+                    second.lost()
+                    if first == p1:
+                        p1Tally += 1
+                    else:
+                        p2Tally += 1
+                else:
+                    first.lost()
+                    second.won()
+                    if second == p1:
+                        p1Tally += 1
+                    else:
+                        p2Tally += 1
+
+                temp = first
+                first = second
+                second = temp
+            print(p1.name, "wins: ", p1Tally)
+            print(p2.name, "wins: ", p2Tally)
+        else:
+            first = p1
+            second = p2
+            for i in range(n):
+                print ("Game", i)
+                winner = self.playOneGame(first, second, show)
+                if winner == 'B':
+                    first.won()
+                    second.lost()
+                    print (first.name, "wins")
+                else:
+                    first.lost()
+                    second.won()
+                    print (second.name, "wins")
+                temp = first
+                first = second
+                second = temp
 
 
 class Player(metaclass = abc.ABCMeta):
@@ -387,7 +417,3 @@ class SimplePlayer(Konane, Player):
             return []
         else:
             return moves[0]
-
-
-game = Konane(4)
-game.playNGames(1, HumanPlayer(), HumanPlayer(), 1)
