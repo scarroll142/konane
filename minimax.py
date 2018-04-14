@@ -15,14 +15,15 @@ class MinimaxPlayer(Konane, Player):
 
     def getMove(self, board):
         moves = self.generateMoves(board, self.side)
-        n = len(moves)
-        if n == 0:
+
+        if not moves:
             return []
-        else:
-            evalValues = []
-            for move in moves:
-                evalValues.append(self.eval(self.nextBoard(board, self.side, move)))
-            return moves[evalValues.index(max(evalValues))]
+
+        values = []
+        for move in moves:
+            values.append(self.minimax(self.nextBoard(board, self.side, move), 1))
+
+        return moves[values.index(max(values))]
 
     def eval(self, board):
         return self.movesCount(board, self.opponent(self.side)) * -1
@@ -33,3 +34,37 @@ class MinimaxPlayer(Konane, Player):
         Determines heuristic value of the number of possible moves for given player for current board
         """
         return len(self.generateMoves(board, player))
+
+    def extendPath(self, board, side):
+        moves = self.generateMoves(board, side)
+        boards = []
+        for move in moves:
+            boards.append(self.nextBoard(board, side, move))
+
+        return boards
+
+    def minimax(self, board, depth):
+        if depth >= self.limit:
+            return self.eval(board)
+
+        isMax = depth % 2 == 0
+
+        if isMax:
+            nextBoards = self.extendPath(board, self.side)
+        else:
+            nextBoards = self.extendPath(board, self.opponent(self.side))
+
+        if not nextBoards:
+            if isMax:
+                return -float("inf")
+            else:
+                return float("inf")
+
+        values = []
+        for nextBoard in nextBoards:
+            values.append(self.minimax(nextBoard, depth + 1))
+
+        if isMax:
+            return max(values)
+        else:
+            return min(values)
