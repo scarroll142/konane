@@ -245,10 +245,12 @@ class Konane:
         p2.initialize('W')
         if show:
             print (p1.name, "vs", p2.name)
+
+        turn = 1
         while 1:
             if show:
                 print (self)
-                print ("player B's turn")
+                print ("player B's turn [", turn, "]")
             move = p1.getMove(self.board)
             if move == []:
                 result = 'W'
@@ -259,11 +261,12 @@ class Konane:
                 print ("ERROR: invalid move by", p1.name)
                 result = 'W'
                 break
+            turn += 1
             if show:
                 print (move)
                 print
                 print (self)
-                print ("player W's turn")
+                print ("player W's turn [", turn, "]")
             move = p2.getMove(self.board)
             if move == []:
                 result = 'B'
@@ -274,6 +277,7 @@ class Konane:
                 print ("ERROR: invalid move by", p2.name)
                 result = 'B'
                 break
+            turn += 1
             if show:
                 print (move)
                 print
