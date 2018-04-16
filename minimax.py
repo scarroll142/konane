@@ -44,7 +44,7 @@ class MinimaxPlayer(Konane, Player):
         """
         Determines heuristic value of given board.
         """
-        return self.movesCount(board, self.opponent(self.side)) * -1
+        return 2 * (self.movesCount(board, self.side) - self.movesCount(board, self.opponent(self.side))) + (self.countSymbol(board, self.side) - self.countSymbol(board, self.opponent(self.side)))
 
     def movesCount(self, board, player):
         """
@@ -144,7 +144,8 @@ class MinimaxPlayer2(Konane, Player):
         """
         Determines heuristic value of given board.
         """
-        return (self.movablePieces(board, self.side)) - (self.movablePieces(board, self.opponent(self.side)))
+        return self.movablePieces(board, self.side) - (3 * self.movablePieces(board, self.opponent(self.side))) 
+        #return (self.movablePieces(board, self.side)) - (self.movablePieces(board, self.opponent(self.side)))
 
     def movesCount(self, board, player):
         """
