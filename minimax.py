@@ -44,13 +44,27 @@ class MinimaxPlayer(Konane, Player):
         """
         Determines heuristic value of given board.
         """
-        return 2 * (self.movesCount(board, self.side) - self.movesCount(board, self.opponent(self.side))) + (self.countSymbol(board, self.side) - self.countSymbol(board, self.opponent(self.side)))
+        return (self.movablePieces(board, self.side) - (3 * self.movablePieces(board, self.opponent(self.side)))) + (self.movesCount(board, self.side) - (4 * self.movesCount(board, self.opponent(self.side))))
+        #return 2 * (self.movesCount(board, self.side) - self.movesCount(board, self.opponent(self.side))) + (self.countSymbol(board, self.side) - self.countSymbol(board, self.opponent(self.side)))
 
     def movesCount(self, board, player):
         """
         Determines heuristic value of the number of possible moves for given player for current board.
         """
         return len(self.generateMoves(board, player))
+
+    def movablePieces(self, board, player):
+        """
+        Determines the heuristic value of the number of movable pieces for given player for current board.
+        """
+        moves = self.generateMoves(board, player)
+        counter = 0
+        pieces = []
+        for move in moves:
+            if [moves[counter][0], moves[counter][1]] not in pieces:
+                pieces.append([moves[counter][0], moves[counter][1]])
+            counter += 1
+        return len(pieces)
 
     def extendPath(self, board, side):
         """
@@ -144,7 +158,7 @@ class MinimaxPlayer2(Konane, Player):
         """
         Determines heuristic value of given board.
         """
-        return self.movablePieces(board, self.side) - (3 * self.movablePieces(board, self.opponent(self.side))) 
+        return self.movablePieces(board, self.side) - (3 * self.movablePieces(board, self.opponent(self.side)))
         #return (self.movablePieces(board, self.side)) - (self.movablePieces(board, self.opponent(self.side)))
 
     def movesCount(self, board, player):
